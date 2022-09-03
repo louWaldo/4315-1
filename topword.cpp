@@ -1,71 +1,103 @@
 #include <iostream>
 #include <fstream>
+#include <string>
+#include <regex>
 #include <unordered_map>
 using namespace std;
-            // "input=f.txt;output=out.txt"
 
 template<typename K, typename V>
-void print_map(std::unordered_map<K, V> const &m)
+void print_map(unordered_map<K, V> const &m, string outname)
 {
+    ofstream out(outname);
+    // find the max value in the map
+    V max = 0;
+    for (auto const &pair: m) {
+        if (pair.second > max) {
+            max = pair.second;
+        }
+    }
     for (auto it = m.cbegin(); it != m.cend(); ++it) {
-        std::cout << "{" << (*it).first << ": " << (*it).second << "}\n";
+        // if the first thing is a space or empty word ignore it
+        if (it->first[0] == ' ' || it->first.empty()) {
+            continue;
+        }
+        else if (it->second == max) {
+            out << (*it).first << " " << (*it).second << endl;
+        }
     }
+    out.close();
 }
-
-
+//The script is not recursive, so it will read and map the words at the same time.
+//The script will read the file and map the words, then it will print the map to a file.
+// The Search algorithm for printing is just a simple linear search.
+// As there is no need for searching the map, the search algorithm is not optimized.
+// The map is not sorted, so the search algorithm is not optimized.
+// Since the words are scrubbed, and the scrubb algorithm is on a per word basis there is no high level algorithm
 int main(int argc, char** argv) {
-    string outfile = argv[1];
-    string delimiter = ";";
-    unordered_map<string, int> umap;
-
-    size_t pos = 0;
-    string infile;
-    string outstring;
-    while ((pos = outfile.find(delimiter)) != std::string::npos) {
-        infile = outfile.substr(0, pos);
-        outstring = infile.substr(6);
-        outfile.erase(0, pos + delimiter.length());
-    }
-    string ot = outfile.substr(7);
-//     Your program should display a small “help” if not input parameters are provided and must write error messages to the screen. Your program should not crash, halt unexpectedly or produce unhandled
-// exceptions. Consider empty input, blank lines and so on.
-    string Text;
-    ofstream out(ot);
-    ifstream inf(outstring);
-
-    while (getline (inf, Text)) {
-    // Output the text from the file
-        if (Text.length() > 1) {
-            // out << Text << endl;
-
-            // split each Text into words and put them into the unordered_map
-            string word;
+    // throw an error is no arguments are passed
+    try
+    {
+        // get the arguments
+        if (argc < 2) {
+            throw argc;
+        } 
+        else {
+            // Parsing arguments and getting the input and output file names
+            string outfile = argv[1];
+            string delimiter = ";";
+    
             size_t pos = 0;
-            while ((pos = Text.find(" ")) != std::string::npos) {
-                word = Text.substr(0, pos);
-                Text.erase(0, pos + 1);
-                // out << word << endl;
-                if (umap.find(word) == umap.end()) {
-                    umap[word] = 1;
-                } else {
-                    umap[word]++;
+            string infile;
+            string outstring;
+            while ((pos = outfile.find(delimiter)) != string::npos) {
+                infile = outfile.substr(0, pos);
+                outstring = infile.substr(6);
+                outfile.erase(0, pos + delimiter.length());
+            }
+            string ot = outfile.substr(7);
+            // Starting to parse input file and scrubb
+            string Text;
+            unordered_map<string, int> umap;
+            ifstream inf(outstring);
+            regex e ("\\S*\\d+\\S*");
+            regex b ("\\s{2}");
+            regex c ("\\W");
+            regex d ("[[:punct:]]");
+            while (getline (inf, Text)) {
+        
+            // scrubbing the text
+                if (Text.length() > 1) {
+                    //scrubbing the text of any unwanted characters/ letter+number combos
+                    Text = regex_replace(Text, e, "");
+                    Text = regex_replace(Text, b, " ");
+                    Text = regex_replace(Text, c, " ");
+                    Text = regex_replace(Text, d, " ");
+                    string word;
+                    //adding the words to the map
+                    for (int i = 0; i < Text.length(); i++) {
+                        if (Text[i] != ' ') {
+                            word += tolower(Text[i]);
+                        }
+                        else {
+                            umap[word]++;
+                            word = "";
+                        }
+                    }
+                    if (word != " " && word != "" && umap.find(word) == umap.end() ) {
+                        umap[word] = 1;
+                    } else {
+                        umap[word]++;
+                    }
                 }
             }
-            if (umap.find(Text) == umap.end()) {
-                umap[Text] = 1;
-            } else {
-                umap[Text]++;
-            }
-
-            print_map(umap);
-            cout << umap.size() << endl;
-        }
-            // clean up logic for text : know rules but your program should handle strange symbols, long/empty lines, and so on.
-            // Numbers can be ignored.
-
+            // print map to file
+            print_map(umap,ot);
+            inf.close();
+        }   
     }
-
-
-
-  return 0;
+    catch(int arguments)
+    {
+        std::cerr << "Please Give Correct Argument" << '\n' << "Example: ./topText 'input=filename.txt;output=outfile.txt'" << '\n';
+    }
+    return 0;
 }
