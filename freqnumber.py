@@ -19,9 +19,11 @@ def freqNum(k, inFile, outfile):
         flatList = [element for innerList in bloated for element in innerList]
     f.close()
         # now that the I/O has been handled we can calculate frequency and build lists or reals and integers
-    print(flatList)
     #     Your program should use map()/reduce() functional constructs to compute the frequency of each number in the input file.
-    # cleanlst = lambda c: something goes here ,filter(lambda i:re.match(r'-?[.\d]+',i),something goes here)
+    # cleanlst = lambda c: something goes here ,
+    shindig = map(lambda i:re.findall('-?\d+\.{1}\d+',i), flatList)
+    intshindig = map(lambda i:re.findall('(?<![.])\b[0-9]+\b(?!\.[0-9])',i), flatList)
+    print(*intshindig)
     # print(*cleanlst)
     # integerlst = map(lambda s: isdigit(s[0]), flatList)
     # fltlst = map(lambda s: not(isdigit(s[0])), flatList)
