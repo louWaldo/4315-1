@@ -21,19 +21,12 @@ def freqNum(k, inFile, outfile):
         # now that the I/O has been handled we can calculate frequency and build lists or reals and integers
     #     Your program should use map()/reduce() functional constructs to compute the frequency of each number in the input file.
     # cleanlst = lambda c: something goes here ,
-    shindig = map(lambda i:re.findall('-?\d+\.{1}\d+',i), flatList)
-    intshindig = map(lambda i:re.findall('(?<![.])\b[0-9]+\b(?!\.[0-9])',i), flatList)
-    print(*intshindig)
-    # print(*cleanlst)
-    # integerlst = map(lambda s: isdigit(s[0]), flatList)
-    # fltlst = map(lambda s: not(isdigit(s[0])), flatList)
-    # count = 0
-    # for i in fltlst:
-    #     print(i)   
-    # print(integerlst)
-    # print(fltlst)
-    # tempintLst = reduce(lambda x, y: x + y, integerlst)
-    # tempfltLst = reduce(lambda x, y: x + y, fltlst)
+    floatr = map(lambda i: re.findall('-?\d+\.{1}\d+',i), flatList)
+    print(*floatr, sep=',')
+    cleanlst = flatList.copy()
+    #print(cleanlst)
+    inti = map(lambda i: re.findall('-?(?<![.])\b[0-9]+\b(?!\.[0-9])',i), cleanlst)
+    print(*inti, sep=',')
 
     with open(outfile, "a") as f:
         for i in range(k):
