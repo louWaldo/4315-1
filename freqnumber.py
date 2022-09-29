@@ -6,9 +6,20 @@ import re
 from posixpath import split
 import sys
 
+def cleanlist(seq):
+    #base case
+    clnseq = []
+    if seq[0] in clnseq:
+        cseq=seq[1:].copy()
+        print(cseq)
+        cleanlist(seq[1:])
+    else:
+        clnseq.append(seq[0])
+      
+    return clnseq
+
 def freqNum(k, inFile, outfile):
-    
-    
+        
     integerlst: List[int] # integers only
     tempintLst: List[int]
     fltlst: List[float] # all real numbers
@@ -17,16 +28,26 @@ def freqNum(k, inFile, outfile):
     with open(inFile) as f:
         bloated = [s.strip().split(" ") for s in f.readlines()]
         flatList = [element for innerList in bloated for element in innerList]
+        copyflt = flatList.copy()
     f.close()
-        # now that the I/O has been handled we can calculate frequency and build lists or reals and integers
-    #     Your program should use map()/reduce() functional constructs to compute the frequency of each number in the input file.
-    # cleanlst = lambda c: something goes here ,
-    floatr = map(lambda i: re.findall('-?\d+\.{1}\d+',i), flatList)
-    print(*floatr, sep=',')
+
+    floatr = list(map(lambda i: re.findall('-?\d+\.{1}\d+',i), copyflt))
+    #print(floatr, sep=',')
     cleanlst = flatList.copy()
-    #print(cleanlst)
-    inti = map(lambda i: re.findall('-?(?<![.])\b[0-9]+\b(?!\.[0-9])',i), cleanlst)
-    print(*inti, sep=',')
+    inti = list(map(lambda i: re.findall('-?\d*',i), flatList))
+    #print(inti, sep=',')
+    
+    flatten=lambda l: sum(map(flatten,l),[]) if isinstance(l,list) else [l]
+    F=flatten(floatr)
+    print(inti)
+    print("Fu me")
+    print(F)
+    print("")
+    print("")
+    print(cleanlist(inti))
+
+
+    #This is for the end
 
     with open(outfile, "a") as f:
         for i in range(k):
@@ -34,7 +55,6 @@ def freqNum(k, inFile, outfile):
         # for i in range(k):
         #     f.write(flatList[i])
     f.close()
-
     return 0
 
 
