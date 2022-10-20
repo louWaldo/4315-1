@@ -1,9 +1,12 @@
-//getting started with the c++ based interpriter
-//
-//
 #include <iostream>
+
 using namespace std;
 
+// /*** 
+//  * getting started with the c++ based interpriter
+// 													***/ 
+
+//  How to run it ./minipython freqnumber.py
 int main(int argc, char** argv){
 	cout << "You have entered " << argc << " arguments:" << "\n";
 
