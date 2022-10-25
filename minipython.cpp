@@ -1,6 +1,10 @@
 #include <iostream>
 #include <fstream>
 
+#include <iterator>
+#include <string>
+#include <regex>                                                                   
+
 using namespace std;
 
 // /*** 
