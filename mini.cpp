@@ -49,11 +49,11 @@ int main(int argc, char* argv[])
         //if 'print' --> print statement
         if(instructions[i].find("print") != string::npos) 
         {
-            //check for variable calls and function calls
+            //print(string representing instruction, vector of variables, vector of values)
             print(instructions[i], variables, values);
         }
 
-        //if contains "#" or line is empty --> ignore the entire line
+        //if contains "#" or line is empty --> ignore the entire line bc must be comment
         else if(instructions[i].find("#") != string::npos) 
         { 
             continue; 
@@ -62,7 +62,7 @@ int main(int argc, char* argv[])
         //if '=' --> assignment operator
         else if(instructions[i].find("=") != string::npos) 
         {
-            //clean and parse the line
+            //parses line for operators, variables, values, etc, and evaluates any expressions 
             parser(instructions[i], variables, values);
         }
 
