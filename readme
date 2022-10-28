@@ -1,0 +1,21 @@
+PSID: 1455130
+UNIXID: COSC2954
+DONALD AGUINALDO
+
+Interpreter HW2 Resubmission
+
+Compile:
+   
+   g++ -std=c++11 mypython.cpp lex.yy.c -o mypython
+
+Run:
+
+  mypython <file.py
+
+Limitations:
+- Must have an extra line at the end otherwise it will not
+read the last statement.
+- When evaluating for if statements, it needs to have spaces
+between variable - operator - variable. (ex. if x <= y:) and
+cannot be (if x<=y:)
+
